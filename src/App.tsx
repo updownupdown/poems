@@ -9,6 +9,7 @@ import { Header } from "./components/misc/Header";
 import { popMovies } from "./data/pop_movies";
 import { popShows } from "./data/pop_shows";
 import { popSongs } from "./data/pop_songs";
+import clsx from "clsx";
 
 type Card = {
   "1": string;
@@ -31,19 +32,19 @@ const defaultPlayState = {
 
 const lists = [
   {
-    name: "Base Grey",
+    name: "Base Box: Grey",
     list: cardsBaseGrey,
   },
   {
-    name: "Base Red",
+    name: "Base Box: Red",
     list: cardsBaseRed,
   },
   {
-    name: "Expansion Grey",
+    name: "Expansion Pack: Grey",
     list: cardsExpansionGrey,
   },
   {
-    name: "Expansion Red",
+    name: "Expansion Pack: Red",
     list: cardsExpansionRed,
   },
   {
@@ -68,7 +69,7 @@ const lists = [
     list: popSongs,
   },
   {
-    name: "All pop (music, shows, songs)",
+    name: "All Pop (music, shows, songs)",
     list: [...popMovies, ...popShows, ...popSongs],
   },
 ];
@@ -137,11 +138,11 @@ function App() {
       <Header />
 
       <div className="main__score">
-        <span>Score Total: {playState.scoreTotal}</span>
+        <span>Total: {playState.scoreTotal}</span>
 
         {timer ? (
           <>
-            <span>Score this game: {score}</span>
+            <span>Score: {score}</span>
             <button
               type="button"
               onClick={() => {
@@ -168,10 +169,15 @@ function App() {
 
       {timer && (
         <div className="main__timer">
-          <span className="main__timer__text">Timer: {timer}</span>
+          <span className="main__timer__text">{timer}</span>
 
           <div
-            className="main__timer__bar"
+            className={clsx(
+              "main__timer__bar",
+              timer / playState.timerLength < 0.5 && "main__timer__bar--yellow",
+              timer / playState.timerLength < 0.6 && "main__timer__bar--orange",
+              timer / playState.timerLength < 0.1 && "main__timer__bar--red",
+            )}
             style={{ width: `${(timer / playState.timerLength) * 100}%` }}
           />
         </div>
@@ -188,25 +194,25 @@ function App() {
             <div className="main__guessing__buttons">
               <button
                 type="button"
-                className="btn--minus-one"
+                className="red-btn btn--minus-one"
                 onClick={() => handleResult("-1")}
               >
                 -1
               </button>
               <button
                 type="button"
-                className="btn--plus-one"
+                className="orange-btn btn--plus-one"
                 onClick={() => handleResult("1")}
               >
-                1
+                +1
               </button>
               {card["3"] && (
                 <button
                   type="button"
-                  className="btn--plus-three"
+                  className="green-btn btn--plus-three"
                   onClick={() => handleResult("3")}
                 >
-                  3
+                  +3
                 </button>
               )}
             </div>
@@ -214,7 +220,7 @@ function App() {
         )
       ) : (
         <div className="main__options">
-          <p>Timer</p>
+          <p>Timer (seconds)</p>
 
           <div className="main-options-list main-options-list--time">
             {timerLengths.map((t) => {
@@ -226,13 +232,13 @@ function App() {
                   }}
                   disabled={playState.timerLength === t}
                 >
-                  {t}s
+                  {t}
                 </button>
               );
             })}
           </div>
 
-          <p>List</p>
+          <p>Card Pack</p>
 
           <div className="main-options-list main-options-list--lists">
             {lists.map((l) => {
@@ -253,6 +259,7 @@ function App() {
           </div>
 
           <button
+            className="accent-btn"
             onClick={() => {
               startTimer();
             }}
