@@ -1,31 +1,276 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+@use "./colors.scss";
+@use "./media.scss";
+@use "./main.scss";
+@use "sass:color";
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+
+:root {
+  // Generate hex/rgb CSS vars for default/rgba usage, respectively
+  @function hexToRGB($hex) {
+    @return color.channel($hex, "red", $space: rgb),
+      color.channel($hex, "green", $space: rgb),
+      color.channel($hex, "blue", $space: rgb);
+  }
+  @each $name, $color in colors.$theme-colors {
+    --#{$name}: #{$color};
+    --#{$name}-rgb: #{hexToRGB($color)};
+  }
+
+  --font: "Outfit", sans-serif;
+  --font-mono: "Courier New", Courier, monospace;
+
+  --content-width: 700px;
+  --button-height: 44px;
 }
 
-.main {
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  width: 100%;
+  height: 100%;
+}
 
-  .card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+html {
+  height: 100%;
+}
 
-    width: 200;
-    height: 300px;
+body {
+  overflow-y: auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  height: 100%;
 
-    border-radius: 12px;
-    background: white;
-    box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.2);
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+  color: var(--K800);
+  line-height: 1;
+}
+
+body,
+button,
+a,
+textarea,
+input {
+  font-family: var(--font);
+  color: var(--K800);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+li {
+  font-family: var(--font);
+  font-size: 18px;
+  line-height: 1.3;
+  color: var(--K800);
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-bottom: 8px;
+  color: var(--K800);
+}
+
+h1 {
+  font-size: 36px;
+  font-weight: 650;
+  color: var(--K800);
+}
+h2 {
+  font-size: 26px;
+  font-weight: 350;
+  color: var(--K800);
+}
+h3 {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--K800);
+}
+h4 {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--K800);
+}
+h5 {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--K800);
+}
+h6 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--K800);
+}
+
+p {
+  margin-bottom: 20px;
+}
+p,
+li {
+  font-weight: 250;
+
+  b {
+    font-weight: 700;
+  }
+}
+
+ul {
+  padding-left: 20px;
+}
+
+a {
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--blue);
+
+  &:hover {
+    color: var(--purple);
+  }
+}
+
+button {
+  cursor: pointer;
+  margin: unset;
+  background: unset;
+  border: unset;
+
+  transition: 0.2s ease all;
+  padding: 0 16px;
+  height: var(--button-height);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: calc(var(--button-height) / 2);
+  border: 1px solid rgba(var(--K100-rgb), 0.5);
+  background: var(--K300);
+  box-shadow:
+    inset 0 0 8px rgba(var(--K100-rgb), 0.1),
+    1px 2px 8px rgba(var(--K950-rgb), 0.1);
+
+  font-size: 18px;
+  font-weight: 550;
+  color: var(--K800);
+  line-height: 1.4;
+
+  &:disabled {
+    cursor: not-allowed;
+
+    border: 1px solid rgba(var(--K200-rgb), 0.1);
+    background: unset;
+    box-shadow: 1px 2px 8px rgba(var(--K800-rgb), 0.1);
+
+    color: var(--K300);
   }
 
-  &__buttons {
-    display: flex;
-    gap: 20px;
+  &:not(:disabled) {
+    &:hover,
+    &:active {
+      color: var(--K100);
+      border-color: var(--K400);
+      background: var(--K800);
+    }
   }
+
+  @mixin color-btn($name, $bg-color, $text-color, $text-shadow) {
+    &.#{$name}-btn {
+      border: unset;
+      background: var(--#{$bg-color});
+      box-shadow:
+        inset 0 0 1px rgba(var(--white-rgb), 0.8),
+        inset 0 0 8px rgba(var(--white-rgb), 0.2),
+        0 0 4px rgba(var(--#{$bg-color}-rgb), 0.6),
+        1px 2px 10px rgba(var(--#{$bg-color}-rgb), 0.6);
+
+      color: $text-color;
+      text-shadow: $text-shadow;
+
+      svg {
+        fill: $text-color;
+        filter: drop-shadow($text-shadow);
+      }
+
+      &:not(:disabled):hover {
+        background: rgba(var(--#{$bg-color}-rgb), 0.7);
+        border-color: rgba(var(--#{$bg-color}-rgb), 1);
+        box-shadow:
+          inset 0 0 2px rgba(var(--white-rgb), 1),
+          inset 0 0 10px rgba(var(--white-rgb), 0.2),
+          0 0 8px rgba(var(--#{$bg-color}-rgb), 0.8),
+          1px 2px 14px rgba(var(--#{$bg-color}-rgb), 0.8);
+
+        color: $text-color;
+
+        svg {
+          fill: $text-color;
+        }
+      }
+      &:disabled {
+        border-color: rgba(var(--K800-rgb), 0.4);
+        background: rgba(var(--K800-rgb), 0.4);
+        box-shadow: unset;
+        color: rgba(var(--K300-rgb), 0.3);
+        text-shadow: unset;
+
+        svg {
+          fill: rgba(var(--K300-rgb), 0.3);
+        }
+      }
+    }
+  }
+
+  @include color-btn(
+    "green",
+    "green",
+    rgba(var(--white-rgb), 1),
+    0 1px 3px rgba(var(--black-rgb), 0.2)
+  );
+  @include color-btn(
+    "orange",
+    "orange",
+    rgba(var(--black-rgb), 1),
+    0 1px 2px rgba(var(--white-rgb), 0.2)
+  );
+
+  &.small-btn {
+    border-radius: calc(var(--button-height) * 0.8 / 2);
+    height: calc(var(--button-height) * 0.8);
+
+    font-size: 16px;
+  }
+  &.large-btn {
+    border-radius: calc(var(--button-height) * 1.4 / 2);
+    height: calc(var(--button-height) * 1.4);
+
+    font-size: 20px;
+  }
+}
+
+.color-green {
+  color: var(--green);
+}
+.color-red {
+  color: var(--red);
+}
+.color-orange {
+  color: var(--orange);
 }

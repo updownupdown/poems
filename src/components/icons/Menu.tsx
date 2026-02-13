@@ -1,0 +1,13 @@
+export const MenuIcon = () => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M21 19.125H3V16.875H21V19.125Z" />
+    <path d="M21 13.125H3V10.875H21V13.125Z" />
+    <path d="M21 7.125H3V4.875H21V7.125Z" />
+  </svg>
+);
